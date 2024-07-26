@@ -14,26 +14,18 @@ headers = {"Accept": "application/json", "Content-Type": "application/json"}
 data ={
     "applications": [
         {
-            "name": "MyModelDeployment",
-            "route_prefix": "/",
-            "import_path": "code:app",
-            "runtime_env": {
-                # "working_dir": "https://github.com/ray-project/serve_config_examples-master.zip"
-                # "working_dir": "s3://tisco.alpha.data.analytics/test_ray_working_dir/test.zip",
-                # "working_dir": f"file://{os.path.abspath('text_ml.zip')}"
-                "working_dir": f"https://github.com/MrYellowSock/ray-test/raw/main/deployments/deployment1/deployment1.zip",
-
-                # using requirements.txt not gonna work
-                # https://discuss.ray.io/t/requirements-txt-support-with-job-api/6338/6
-
-                "pip":{
-                    "packages":["pandas==2.2.1"],
-                }
-            },
+            "name": "my_model_app",
+            "route_prefix": "/my_model",
             "deployments": [
-                {"name": "MyModelDeployment"},
+                {
+                    "name": "MyModelDeployment",
+                    "import_path": "code.MyModelDeployment",
+                    "init_args": {"msg": "Hello world!"},
+                    "num_replicas": 1,
+                    "route_prefix": "/"
+                }
             ]
-        },
+        }
     ]
 }
 

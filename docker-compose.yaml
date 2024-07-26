@@ -3,12 +3,14 @@ services:
   ray_head:
     build : ./head/
     container_name: ray_head
-    shm_size: '4gb'
+    shm_size: '12gb'
     expose:
       - "6379:6379"
       - "8265:8265"
       - "10001:10001"
+      - "8000:8000"
     ports:
+      - "8000:8000"
       - "8265:8265"
 
   ray_worker:
@@ -18,7 +20,7 @@ services:
       - ray_head
     environment:
       - RAY_HEAD_ADDRESS=ray_head:6379
-    shm_size: '4gb'
+    shm_size: '12gb'
 
   ray_client:
     build : ./client/
