@@ -1,0 +1,43 @@
+version: '3'
+services:
+  file_server:
+    image: nginx:alpine
+    container_name: file_server
+    expose:
+      - "9090:80"
+    ports:
+      - "9090:80"
+    volumes:
+      - ./deployments:/shared
+
+  ray_head:
+    build : ./head/
+    container_name: ray_head
+    expose:
+      - "6379:6379"
+      - "8265:8265"
+      - "10001:10001"
+    ports:
+      - "8265:8265"
+    depends_on:
+      - file_server
+
+  ray_worker:
+    build : ./worker/
+    container_name: ray_worker
+    depends_on:
+      - ray_head
+    environment:
+      - RAY_HEAD_ADDRESS=ray_head:6379
+
+  ray_client:
+    build : ./client/
+    container_name: ray_client
+    depends_on:
+      - ray_head
+      - file_server
+    environment:
+      - RAY_HEAD_ADDRESS=ray_head:6379
+      - RAY_HEAD_CLIENT_CONNECT_ADDRESS=ray_head:10001
+      - RAY_HEAD_DASHBOARD_ADDRESS=ray_head:8265
+      - FILE_SERVER_ADDRESS=file_server:9090
