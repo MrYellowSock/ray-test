@@ -28,6 +28,7 @@ services:
     depends_on:
       - ray_head
     environment:
+      - RAY_HOST=ray_head
       - RAY_HEAD_ADDRESS=ray_head:6379
       - RAY_HEAD_CLIENT_CONNECT_ADDRESS=ray_head:10001
       - RAY_HEAD_DASHBOARD_ADDRESS=ray_head:8265

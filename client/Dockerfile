@@ -1,7 +1,7 @@
 from python:3.11.9-slim
 
 WORKDIR /app
-RUN pip install ray[serve] ray[client]
+RUN pip install ray[serve] ray[client]==2.32.0
 
 COPY . .
 
