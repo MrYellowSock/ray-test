@@ -1,7 +1,7 @@
 import requests
 import os
 import time
-from starlette.requests import Request
+from fastapi import FastAPI
 from typing import Dict
 from ray import serve
 import ray
@@ -19,23 +19,26 @@ ray.init(
         }
 )
 
-
+app = FastAPI()
 @serve.deployment
+@serve.ingress(app)
 class MyModelDeployment:
     def __init__(self, msg: str):
 
         self._msg = msg
 
-    def __call__(self, request: Request) -> Dict:
+    @app.get("/")
+    def root(self) -> Dict:
         import os
         import pandas as pd
         return {"result": self._msg, "hostname": os.uname()[1], "pd_version":pd.__version__}
 
-app = MyModelDeployment.bind(msg="Hello world!")
-
+    @app.post("/ping")
+    def ping(self,name:str) -> Dict:
+        return {"result": f"pong {name}"}
 
 serve.start(detached=True, http_options={"host": "0.0.0.0"})  # Start the Ray Serve instance
-serve.run(app, route_prefix="/")
+serve.run(MyModelDeployment.bind(msg="Hello world!"), route_prefix="/")
 
 
 print(requests.get(f"http://{os.getenv('RAY_HOST')}:8000/").json())
