@@ -19,23 +19,28 @@ services:
     ports:
       - "8000:8000"
       - "8265:8265"
+    volumes:
+      - ~/.aws:/root/.aws
 
-  ray_worker:
-    build : ./worker/
-    container_name: ray_worker
-    depends_on:
-      - ray_head
-    environment:
-      - RAY_HEAD_ADDRESS=ray_head:6379
-    shm_size: '12gb'
+        #  ray_worker:
+        #    build : ./worker/
+        #    container_name: ray_worker
+        #    depends_on:
+        #      - ray_head
+        #    environment:
+        #      - RAY_HEAD_ADDRESS=ray_head:6379
+        #    shm_size: '12gb'
 
   ray_client:
     build : ./client/
     container_name: ray_client
+    shm_size: '2gb'
     depends_on:
       - ray_head
     environment:
       - RAY_HOST=ray_head
       - RAY_HEAD_ADDRESS=ray_head:6379
       - RAY_HEAD_CLIENT_CONNECT_ADDRESS=ray_head:10001
-      - RAY_HEAD_DASHBOARD_ADDRESS=ray_head:8265
+      - RAY_HEAD_DASHBOARD_ADDRESS=nginx:8888/raydashboard
+    volumes:
+      - ~/.aws:/root/.aws
