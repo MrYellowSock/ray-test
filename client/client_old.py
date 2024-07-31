@@ -38,12 +38,31 @@ data = {
             ]
         }
          ,{
+            "name": "myfastapi2",
+            "route_prefix": "/myfastapi2",
+            "import_path": "fastapi_sample:app",
+            "runtime_env": {
+                # SOME HOW USING URL FOR RAW FILE DOES NOT WORK??
+                "working_dir": "https://github.com/MrYellowSock/ray-test-sampleconfig/archive/HEAD.zip",
+                "pip":{
+                    "packages":["pandas==2.1.3"],
+                }
+            },
+            "deployments": [
+                {"name": "MyModelDeployment"}
+            ]
+        }
+         ,{
             "name": "myfastapi",
             "route_prefix": "/myfastapi",
             "import_path": "fastapi_sample:app",
             "runtime_env": {
                 # SOME HOW USING URL FOR RAW FILE DOES NOT WORK??
-                "working_dir": "https://github.com/MrYellowSock/ray-test-sampleconfig/archive/HEAD.zip"
+                "working_dir": "https://github.com/MrYellowSock/ray-test-sampleconfig/archive/HEAD.zip",
+                "pip":{
+                    "packages":["pandas==2.1.4"],
+                }
+
             },
             "deployments": [
                 {"name": "MyModelDeployment"}
