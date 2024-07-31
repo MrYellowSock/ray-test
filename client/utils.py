@@ -4,13 +4,11 @@ import boto3
 from urllib.parse import urlparse
 import zipfile
 
-# if model large then long time.
+# DONT NEED THIS
 def download(url):
-    # Parse the URL to determine if it's an S3 URL
     parsed_url = urlparse(url)
     
     if parsed_url.scheme == 's3':
-        # Download from S3
         s3 = boto3.client('s3')
         bucket_name = parsed_url.netloc
         object_key = parsed_url.path.lstrip('/')
@@ -19,7 +17,6 @@ def download(url):
         s3_object = s3.get_object(Bucket=bucket_name, Key=object_key)
         zip_content = s3_object['Body'].read()
     else:
-        # Download from HTTP/HTTPS
         response = requests.get(url)
         response.raise_for_status()  # Check if the request was successful
         zip_content = response.content
