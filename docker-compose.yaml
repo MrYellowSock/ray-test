@@ -22,14 +22,14 @@ services:
     volumes:
       - ~/.aws:/root/.aws
 
-        #  ray_worker:
-        #    build : ./worker/
-        #    container_name: ray_worker
-        #    depends_on:
-        #      - ray_head
-        #    environment:
-        #      - RAY_HEAD_ADDRESS=ray_head:6379
-        #    shm_size: '12gb'
+  ray_worker:
+    build : ./worker/
+    container_name: ray_worker
+    depends_on:
+      - ray_head
+    environment:
+      - RAY_HEAD_ADDRESS=ray_head:6379
+    shm_size: '12gb'
 
   ray_client:
     build : ./client/

@@ -14,13 +14,15 @@ ray.init(
         runtime_env={
             "pip":{
                 # Changes this around
-                "packages":["pandas==2.2.1"]
+                "packages":["pandas==2.1.3"]
             }
         }
 )
 
 app = FastAPI()
-@serve.deployment
+@serve.deployment(
+        name="app2"
+        )
 @serve.ingress(app)
 class MyModelDeployment:
     def __init__(self, msg: str):
@@ -37,9 +39,6 @@ class MyModelDeployment:
     def ping(self,name:str) -> Dict:
         return {"result": f"pong {name}"}
 
-serve.start(detached=True, http_options={"host": "0.0.0.0"})  # Start the Ray Serve instance
-serve.run(MyModelDeployment.bind(msg="Hello world!"), route_prefix="/")
+serve.run(MyModelDeployment.bind(msg="Hello i am app2"), route_prefix="/addedapp2", name="app2")
 
 
-print(requests.get(f"http://{os.getenv('RAY_HOST')}:8000/").json())
-# {'result': 'Hello world!', 'hostname': 'xxx', 'version': '2.2.1'}

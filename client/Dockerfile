@@ -6,4 +6,4 @@ RUN pip install ray[all]==2.32.0 smart_open boto3
 COPY . .
 
 
-CMD python3 client_old.py && sleep infinity
+CMD python3 deploy_api_composite_app.py && sleep infinity
