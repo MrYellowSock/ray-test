@@ -11,6 +11,9 @@ url = f"http://{RAY_ADDR}/api/serve/applications/"
 headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
 data = {
+    "http_options":{
+        "root_path":"/rayapi"
+    },
     "applications": [
          {
             "name": "regular_composite",
@@ -21,6 +24,7 @@ data = {
                 "working_dir": "https://github.com/MrYellowSock/ray-test-sampleconfig/archive/HEAD.zip"
             },
             "deployments": [
+                # can only have single deployment
                 {"name": "Ingress"}
             ]
         },
@@ -32,7 +36,7 @@ data = {
                 "working_dir": "https://github.com/MrYellowSock/ray-test-sampleconfig/archive/HEAD.zip"
             },
             "deployments": [
-                {"name": "IngressFastAPI"}
+                {"name": "IngressFastAPI", "version":"v2"}
             ]
         },
          {
